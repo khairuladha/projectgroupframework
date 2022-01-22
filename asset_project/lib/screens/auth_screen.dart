@@ -23,9 +23,9 @@ class AuthScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-                color:Colors.teal,
-              ),
+              color: Colors.teal,
             ),
+          ),
           SingleChildScrollView(
             child: Container(
               height: deviceSize.height,
@@ -36,11 +36,11 @@ class AuthScreen extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
-                        ..translate(-10.0),
+                      // margin: EdgeInsets.only(bottom: 20.0),
+                      // padding:
+                      //     EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
+                      // transform: Matrix4.rotationZ(-8 * pi / 180)
+                      // ..translate(-10.0),
                       // ..translate(-10.0),
                       // decoration: BoxDecoration(
                       //   borderRadius: BorderRadius.circular(20),
@@ -53,18 +53,19 @@ class AuthScreen extends StatelessWidget {
                       //     )
                       //   ],
                       // ),
-                      child: Text(
-                        '',
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .accentTextTheme
-                              .subtitle1
-                              ?.color,
-                          fontSize: 30,
-                          fontFamily: 'Anton',
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
+                      child: // Text(
+                          //   '',
+                          //   style: TextStyle(
+                          //     color: Theme.of(context)
+                          //         .accentTextTheme
+                          //         .subtitle1
+                          //         ?.color,
+                          //     fontSize: 30,
+                          //     fontFamily: 'Anton',
+                          //     fontWeight: FontWeight.normal,
+                          //   ),
+                          // ),
+                          Image(image: AssetImage("assets/images/bad.png")),
                     ),
                   ),
                   Flexible(

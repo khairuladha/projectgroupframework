@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../widgets/drawer.dart';
-import '../widgets/asster_list.dart';
+import '../widgets/assets_list.dart';
+
 class MainPageScreen extends StatelessWidget {
-  const MainPageScreen({ Key? key }) : super(key: key);
+  const MainPageScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         title: Text('INVENTORY'),
         // leading: IconButton(onPressed: (){},
@@ -20,16 +20,14 @@ class MainPageScreen extends StatelessWidget {
         //     icon: Icon(Icons.search),
         //     ),
         //  ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20.0)
-            ),
-          ),
-         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
+        ),
+      ),
 
       drawer: AppDrawer(), //calling method UI drawer
 
-      body: AsstetList(),
+      body: AssetList(),
       // PageView.builder(
       //   scrollDirection: Axis.vertical, //untuk scroll data
       //   controller: PageController(viewportFraction: .5), //size untuk display
@@ -44,7 +42,6 @@ class MainPageScreen extends StatelessWidget {
       //     );
       //   },
       // ),
-      
     );
   }
 }

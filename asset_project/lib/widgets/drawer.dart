@@ -1,7 +1,9 @@
+import 'package:asset_project/screens/profile.dart';
 import 'package:flutter/material.dart';
 import '../screens/add_asset.dart';
 import '../providers/auth.dart';
 import 'package:provider/provider.dart';
+import '../screens/profile.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -32,15 +34,17 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.person_outline),
             title: Text(
-              'Profile',
+              'Company Profile',
               style: TextStyle(
                 color: Colors.blue,
                 fontSize: 18,
               ),
             ),
             onTap: () {
-              Navigator.of(context)
-                  .pushReplacementNamed('/'); //nnti letak page sini
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => profile())); //nnti letak page sini
             },
           ),
           Divider(),
@@ -54,8 +58,11 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.push(context,
-               MaterialPageRoute(builder:(context) =>  addAssetScreen() )); //nnti letak page sini
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          addAssetScreen())); //nnti letak page sini
             },
           ),
           Divider(),
@@ -70,7 +77,7 @@ class AppDrawer extends StatelessWidget {
             ),
             onTap: () {
               Navigator.of(context).pop();
-              Provider.of<Auth>(context,listen:false).logout();
+              Provider.of<Auth>(context, listen: false).logout();
             },
           ),
         ],

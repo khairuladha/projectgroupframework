@@ -1,19 +1,20 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class Contact{
   final String name;
   final String role;
-  final String address;
-  final String phone;
-  final String email;
-  final String website;
+  final ImageIcon icon;
+  
 
-  const Contact(this.name, this.role,this.address,this.phone,this.email,
-  this.website);
+  const Contact(this.name, this.role,this.icon);
 
   static const contacts = [
-    Contact('Shoes','Supervisor','telok panglima garang','0192921122','khai@gmail.co,','fdg.gov'),
-    Contact('Racket','balaci','telok panglima garang','0192921122','khai@gmail.co,','fdg.gov'),
-    Contact('Shuttlecock','pencuci najis','telok panglima garang','0192921122','khai@gmail.co,','fdg.gov'),
-    Contact('Net','pengutip hutang','telok panglima garang','0192921122','khai@gmail.co,','fdg.gov'),
+    Contact('Shoes','Supervisor',ImageIcon(AssetImage('assets/images/icon_shose.png'),size: 60,)),
+    Contact('Racket','balaci',ImageIcon(AssetImage('assets/images/icon_shose.png'),size: 60,)),
+    Contact('Shuttlecock','pencuci najis',ImageIcon(AssetImage('assets/images/icon_shose.png'),size: 60,)),
+    Contact('Net','pengutip hutang',ImageIcon(AssetImage('assets/images/icon_shose.png'),size: 60,)),
 
   ];
+
 }

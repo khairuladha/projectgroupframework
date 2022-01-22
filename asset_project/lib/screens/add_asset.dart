@@ -68,7 +68,7 @@ class addAssetScreen extends StatelessWidget {
       ),
       validator: (value) {
         if (value!.isEmpty) {
-          return 'Subname is reqired';
+          return 'Subname is required';
         }
         return null;
       },
@@ -93,7 +93,6 @@ class addAssetScreen extends StatelessWidget {
                   : ' Registaration asset: ${DateFormat.yMd().format(_selectedDate)}',
             ),
           ),
-          
           ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 primary: Colors.blue,
@@ -141,7 +140,7 @@ class addAssetScreen extends StatelessWidget {
       keyboardType: TextInputType.text,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'location is reqired';
+          return 'location is required';
         }
         return null;
       },
@@ -163,7 +162,7 @@ class addAssetScreen extends StatelessWidget {
       keyboardType: TextInputType.text,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'status is reqired';
+          return 'status is required';
         }
         return null;
       },
@@ -180,7 +179,7 @@ class addAssetScreen extends StatelessWidget {
       keyboardType: TextInputType.text,
       validator: (value) {
         if (value!.isEmpty) {
-          return 'no is reqired';
+          return 'no is required';
         }
         return null;
       },
@@ -208,7 +207,8 @@ class addAssetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('INVENTORY'),
+      appBar: AppBar(
+        title: Text('ADD ASSET'),
         // leading: IconButton(onPressed: (){},
         //  icon:Icon(Icons.menu),
         //  ),
@@ -219,13 +219,10 @@ class addAssetScreen extends StatelessWidget {
         //     icon: Icon(Icons.search),
         //     ),
         //  ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20.0)
-            ),
-          ),
-          ),
-      
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
+        ),
+      ),
       drawer: AppDrawer(),
       body: _isLoading
           ? Center()
