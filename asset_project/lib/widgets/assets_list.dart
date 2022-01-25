@@ -64,7 +64,7 @@ class RandomColorModel {
   //class untuk tukar warna grid view
   Random random = Random();
   Color getColor() {
-    return Color.fromARGB(random.nextInt(500), random.nextInt(500),
+    return Color.fromARGB(random.nextInt(300), random.nextInt(500),
         random.nextInt(500), random.nextInt(500));
   }
 }

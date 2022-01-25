@@ -1,259 +1,212 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; //import json
 import '../widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
 class addAssetScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
+  TextEditingController asset_brand = TextEditingController();
+  TextEditingController asset_status = TextEditingController();
+  TextEditingController asset_location = TextEditingController();
+  String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+
+
   final listOfName = ['Raket', 'Bulu Tangkis', 'Net', 'Kasut', 'Grip'];
-  late DateTime _selectedDate = DateTime.now();
-
   String dropdownValue = 'Raket';
-  late String asset_no;
-  late String asset_name;
-  late String asset_subName;
-  late String asset_location;
-  late String asset_status;
+  String asset_no = '';
 
-/////////////////////////////////////
-  ///     FUNCTION
-/////////////////////////////////////
-
-  var _isInit = true;
-  var _isLoading = false;
-
-/////////////////////////////////////
-  ///     WIDGET FORM
-/////////////////////////////////////
-
-  Widget _buildName() {
-    return DropdownButtonFormField(
-      value: dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      style: const TextStyle(color: Colors.deepPurple),
-      elevation: 16,
-      decoration: InputDecoration(
-        labelText: "Select Asset Name",
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropdownValue = newValue!;
-        });
-      },
-      items: listOfName.map((String value) {
-        return new DropdownMenuItem<String>(
-          value: value,
-          child: new Text(value),
-        );
-      }).toList(),
-      validator: (value) {
-        if (value == null) {
-          return 'Please Select Pet';
-        }
-        return null;
-      },
-    );
+  Future<void> addProduct() async {
+    final url =
+        'https://badminton-75d70-default-rtdb.asia-southeast1.firebasedatabase.app/assets.json';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: json.encode({
+          'asset_no': asset_no,
+          'asset_name': dropdownValue,
+          'asset_brand': asset_brand.text,
+          'date_registered': _selectedDate,
+          'asset_location': asset_location.text,
+          'asset_status': asset_status.text,
+        }),
+      );
+    } catch (error) {
+      print(error);
+      throw error;
+    }
   }
 
-  Widget _buildSubName() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Sub Name",
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Subname is required';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        asset_subName = value!;
-      },
-    );
-  }
-
-  Widget _buildRegistered(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(width: 1.0), // Set border width
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Text(
-              _selectedDate == null
-                  ? ' Registaration date no set '
-                  : ' Registaration asset: ${DateFormat.yMd().format(_selectedDate)}',
-            ),
-          ),
-          ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(20.0),
-                ),
-              ),
-              onPressed: () {
-                showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2030))
-                    .then((DateTime? value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedDate = value;
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Select date: $_selectedDate')),
-                    );
-                  }
-                });
-              },
-              icon: Icon(
-                Icons.calendar_today,
-                color: Colors.black,
-                size: 24.0,
-              ),
-              label: Text('Calendar'))
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLocation() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Asset Location",
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'location is required';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        asset_subName = value!;
-      },
-    );
-  }
-
-  Widget _buildStatus() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Status",
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'status is required';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        asset_subName = value!;
-      },
-    );
-  }
-
-  Widget _buildNo() {
-    return TextFormField(
-      decoration: InputDecoration(labelText: 'no'),
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.text,
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'no is required';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        asset_subName = value!;
-      },
-    );
-  }
-
-  Widget _buttonSubmit() {
-    return FlatButton(
-      child: Text("Submit"),
-      textColor: Colors.white,
-      color: Colors.blueAccent,
-      onPressed: () {
-        // if (_formKey.currentState.validate()) {
-        //   _formKey.currentState.save();
-        // }
-      },
-    );
-  }
-
-///////////////////////////////////
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('ADD ASSET'),
-        // leading: IconButton(onPressed: (){},
-        //  icon:Icon(Icons.menu),
-        //  ),
-        //  actions: [
-        //    IconButton(onPressed: (){
-        //      AppDrawer();
-        //    },
-        //     icon: Icon(Icons.search),
-        //     ),
-        //  ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
-        ),
+        //backgroundColor: Colors.redAccent,
       ),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center()
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        _buildName(),
-                        SizedBox(height: 10),
-                        _buildSubName(),
-                        SizedBox(height: 10),
-                        _buildRegistered(context),
-                        SizedBox(height: 10),
-                        _buildLocation(),
-                        SizedBox(height: 10),
-                        _buildStatus(),
-                        SizedBox(height: 10),
-                        _buttonSubmit(),
-                      ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  DropdownButtonFormField( //add name asset
+                    value: dropdownValue,
+                    icon: Icon(Icons.arrow_downward),
+                    style: const TextStyle(color: Colors.deepPurple),
+                    elevation: 16,
+                    decoration: InputDecoration(
+                      labelText: "Select Asset Name",
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                     ),
-                  ],
-                ),
+                    onChanged: (String? newValue) {
+                      dropdownValue = newValue!;
+                      setNo(dropdownValue);
+                    },
+                    items: listOfName.map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please Select asset';
+                      }
+                      return null;
+                    },
+                  ),
+                  
+                  SizedBox(height: 20),
+                  
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Sub Name",
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Subname is required';
+                      }
+                      return null;
+                    },
+                    controller: asset_brand,
+                    
+                  ),
+
+                 SizedBox(height: 20),
+
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Asset Status",
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    controller: asset_status,
+                  ),
+                  
+                  SizedBox(height: 20),                  
+                
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Asset Location",
+                      enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                    controller: asset_location,
+                  ),
+
+
+                  SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      TextButton(
+                        child: Text(
+                          "Add asset".toUpperCase(),
+                          style: TextStyle(fontSize: 14)
+                        ),
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(15)),
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.red)
+                            )
+                          )
+                        ),
+                        onPressed: (){
+                          if (dropdownValue == '') {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: Text('No data'),
+                                  content: Text('Something went wrong.'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                    )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              addProduct();
+                              Navigator.of(context).pop();
+                            }},
+                      ),
+
+                      
+                      SizedBox(width: 20),
+                      
+                     
+                    ],
+                  ),
+                ],
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 
-  void setState(Null Function() param0) {}
+void setNo(String name) {
+    String nameNo;
+    String asset_no;
+    nameNo = name;
+
+    if (name == 'Raket') {
+      asset_no = '1';
+      this.asset_no = asset_no;
+    } else if (name == 'Bulu Tangkis') {
+      asset_no = '2';
+      this.asset_no = asset_no;
+    } else if (name == 'Net') {
+      asset_no = '3';
+      this.asset_no = asset_no;
+    } else if (name == 'Kasut') {
+      asset_no = '4';
+      this.asset_no = asset_no;
+    } else if (name == 'Grip') {
+      asset_no = '5';
+      this.asset_no = asset_no;
+    }
+  }
+
 }
+
+  
