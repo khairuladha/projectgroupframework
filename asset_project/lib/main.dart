@@ -1,4 +1,8 @@
 
+import 'package:asset_project/models/asset.dart';
+import 'package:asset_project/providers/crud_asset.dart';
+import 'package:asset_project/screens/asset_view_screen.dart';
+import 'package:asset_project/screens/edit_asset.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './screens/auth_screen.dart';
@@ -16,18 +20,17 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(
           value: Auth(),
+        ),   
+        ChangeNotifierProxyProvider<Auth, CrudAssets>(
+          create: (ctx) => CrudAssets(null, null,
+              []), //Note: for dependencies version is version 4.00 above (in pubspec.yaml)=> must issue create:
+          update: (ctx, auth, previousProducts) => CrudAssets(
+            //Note: for dependencies version is version 4.00 above (in pubspec.yaml)=> must use :update NOT a :builder..!
+            auth.token,
+            auth.userId,
+            previousProducts == null ? [] : previousProducts.items,
+          ),
         ),
-        
-        // ChangeNotifierProxyProvider<Auth, Products>(
-        //   create: (ctx) => Products(null, null,
-        //       []), //Note: for dependencies version is version 4.00 above (in pubspec.yaml)=> must issue create:
-        //   update: (ctx, auth, previousProducts) => Products(
-        //     //Note: for dependencies version is version 4.00 above (in pubspec.yaml)=> must use :update NOT a :builder..!
-        //     auth.token,
-        //     auth.userId,
-        //     previousProducts == null ? [] : previousProducts.items,
-        //   ),
-        // ),
         // ChangeNotifierProvider.value(
         //   value: Cart(),
         // ),
@@ -60,15 +63,15 @@ class MyApp extends StatelessWidget {
             ),
           ),
           //home: AuthScreen(),
-          home: auth.isAuth ? MainPageScreen() : AuthScreen(),
+          home: auth.isAuth ? AssetViewScreen() : AuthScreen(),
           
-          // routes: {
-          //   ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+          routes: {
+             EditAssetScreen.routeName: (ctx) => EditAssetScreen(),
           //   CartScreen.routeName: (ctx) => CartScreen(),
           //   OrdersScreen.routeName: (ctx) => OrdersScreen(),
           //   UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
           //   EditProductScreen.routeName: (ctx) => EditProductScreen(),
-          // },
+          },
 
         )),
       ),

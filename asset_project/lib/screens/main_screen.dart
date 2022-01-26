@@ -1,7 +1,6 @@
+import 'package:asset_project/screens/asset_view_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/drawer.dart';
-import '../widgets/assets_list.dart';
-
 class MainPageScreen extends StatelessWidget {
   const MainPageScreen({Key? key}) : super(key: key);
 
@@ -20,14 +19,14 @@ class MainPageScreen extends StatelessWidget {
         //     icon: Icon(Icons.search),
         //     ),
         //  ],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
-        ),
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(bottom: Radius.circular(20.0)),
+        // ),
       ),
 
       drawer: AppDrawer(), //calling method UI drawer
 
-      body: AssetList(),
+      body: AssetViewScreen(),
       // PageView.builder(
       //   scrollDirection: Axis.vertical, //untuk scroll data
       //   controller: PageController(viewportFraction: .5), //size untuk display

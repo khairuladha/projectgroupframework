@@ -1,9 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
-
 import '../providers/auth.dart';
 import '../models/http_exception.dart';
 
@@ -23,7 +20,7 @@ class AuthScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: Colors.teal,
+              color: Colors.lightBlue[900],
             ),
           ),
           SingleChildScrollView(
@@ -53,19 +50,7 @@ class AuthScreen extends StatelessWidget {
                       //     )
                       //   ],
                       // ),
-                      child: // Text(
-                          //   '',
-                          //   style: TextStyle(
-                          //     color: Theme.of(context)
-                          //         .accentTextTheme
-                          //         .subtitle1
-                          //         ?.color,
-                          //     fontSize: 30,
-                          //     fontFamily: 'Anton',
-                          //     fontWeight: FontWeight.normal,
-                          //   ),
-                          // ),
-                          Image(image: AssetImage("assets/images/bad.png")),
+                      child: Image(image: AssetImage("assets/images/bad.png")),
                     ),
                   ),
                   Flexible(
@@ -95,10 +80,17 @@ class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
+
   Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
+
+  Map<String, String> _userData = {
+    'name': '',
+    'role': '',
+  };
+
   var _isLoading = false;
   final _passwordController = TextEditingController();
   late AnimationController _controller; //Define the controller
@@ -211,6 +203,9 @@ class _AuthCardState extends State<AuthCard>
     }
   }
 
+  final listOfRole = ['Staff', 'Manager'];
+  String dropdownRole = 'Staff';
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -222,28 +217,63 @@ class _AuthCardState extends State<AuthCard>
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         curve: Curves.easeIn,
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        //height: _authMode == AuthMode.Signup ? 340 : 280,
         //height: _heightAnimation.value.height,
         constraints:
             //BoxConstraints(minHeight: _heightAnimation.value.height),
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
-        width: deviceSize.width * 0.75,
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 290),
+        width: deviceSize.width * 0.85,
         padding: EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                SizedBox(height: 15),
+                if (_authMode == AuthMode.Signup)
+                  DropdownButtonFormField(
+                    //add name asset
+                    // enableFeedback: _authMode == AuthMode.Signup,
+                    isDense: true,
+                    value: dropdownRole,
+                    icon: Icon(Icons.arrow_downward),
+                    style: const TextStyle(color: Colors.black),
+                    elevation: 16,
+                    decoration: InputDecoration(
+                      labelText: "Select Role",
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    items: listOfRole.map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please Select Role';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _userData['role'] = value as String;
+                    },
+                    onChanged: (String? value) {},
+                  ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'E-Mail'),
+                  decoration: InputDecoration(labelText: 'E-mail'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
                     }
+                    return null;
                   },
                   onSaved: (value) {
                     _authData['email'] = value as String;
+                    _userData['name'] = value.toString();
                   },
                 ),
                 TextFormField(
@@ -267,7 +297,7 @@ class _AuthCardState extends State<AuthCard>
                     validator: _authMode == AuthMode.Signup
                         ? (value) {
                             if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
+                              return 'Password do not match!';
                             }
                           }
                         : null,
@@ -286,7 +316,7 @@ class _AuthCardState extends State<AuthCard>
                       borderRadius: BorderRadius.circular(30),
                     ),
                     padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                        EdgeInsets.symmetric(horizontal: 40.0, vertical: 8.0),
                     color: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).primaryTextTheme.button!.color,
                   ),
@@ -294,7 +324,7 @@ class _AuthCardState extends State<AuthCard>
                   child: Text(
                       '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
                   onPressed: _switchAuthMode,
-                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 4),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textColor: Theme.of(context).primaryColor,
                 ),

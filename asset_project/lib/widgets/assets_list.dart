@@ -1,9 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:asset_project/screens/asset_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../providers/contact.dart';
+import '../providers/contact_dummy.dart';
 //import 'contact_card.dart';
 
 class AssetList extends StatelessWidget {
@@ -26,9 +27,12 @@ class AssetList extends StatelessWidget {
 
             return GestureDetector(
                 onTap: () {
-                  print("Click event on Container");
-                  //Navigator.of(context).pushNamed("asdasd");
-                },
+                  
+                 // Navigator.of(context).pushNamed(AssetViewScreen.routeName,
+                 // arguments: contact.name);
+                //  print("Click event on Container "+contact.name);
+                },//set tocken
+
                 child: Container(
                   // decoration: BoxDecoration(
                   //     borderRadius: BorderRadius.all(Radius.circular(18)),

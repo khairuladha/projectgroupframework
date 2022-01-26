@@ -1,9 +1,11 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; //import json
 import '../widgets/drawer.dart';
 import 'package:intl/intl.dart';
+import '../providers/crud_asset.dart';
 
 class addAssetScreen extends StatelessWidget {
   TextEditingController asset_brand = TextEditingController();
@@ -13,30 +15,12 @@ class addAssetScreen extends StatelessWidget {
 
 
 
-  final listOfName = ['Raket', 'Bulu Tangkis', 'Net', 'Kasut', 'Grip'];
-  String dropdownValue = 'Raket';
+  final listOfName = ['Racket', 'Shuttlecock', 'Net', 'Shoes', 'Grip'];
+  String dropdownValue = 'Racket';
   String asset_no = '';
 
-  Future<void> addProduct() async {
-    final url =
-        'https://badminton-75d70-default-rtdb.asia-southeast1.firebasedatabase.app/assets.json';
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        body: json.encode({
-          'asset_no': asset_no,
-          'asset_name': dropdownValue,
-          'asset_brand': asset_brand.text,
-          'date_registered': _selectedDate,
-          'asset_location': asset_location.text,
-          'asset_status': asset_status.text,
-        }),
-      );
-    } catch (error) {
-      print(error);
-      throw error;
-    }
-  }
+  final listOfStatus = ['Active', 'InActive'];
+  String dropdownStatus = 'Active';
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +52,7 @@ class addAssetScreen extends StatelessWidget {
                     ),
                     onChanged: (String? newValue) {
                       dropdownValue = newValue!;
-                      setNo(dropdownValue);
+                      //setNo(dropdownValue);
                     },
                     items: listOfName.map((String value) {
                       return new DropdownMenuItem<String>(
@@ -88,14 +72,14 @@ class addAssetScreen extends StatelessWidget {
                   
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: "Sub Name",
+                      labelText: "Asset Name",
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return 'Subname is required';
+                        return 'Asset Name is required';
                       }
                       return null;
                     },
@@ -105,14 +89,33 @@ class addAssetScreen extends StatelessWidget {
 
                  SizedBox(height: 20),
 
-                  TextFormField(
+                  DropdownButtonFormField(
+                    //add name asset
+                    value: dropdownStatus,
+                    icon: Icon(Icons.arrow_downward),
+                    style: const TextStyle(color: Colors.black),
+                    elevation: 16,
                     decoration: InputDecoration(
-                      labelText: "Asset Status",
+                      labelText: "Select Status",
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    controller: asset_status,
+                    onChanged: (String? newStatus) {
+                      dropdownStatus = newStatus!;
+                    },
+                    items: listOfStatus.map((String status) {
+                      return new DropdownMenuItem<String>(
+                        value: status,
+                        child: new Text(status),
+                      );
+                    }).toList(),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please Select Status';
+                      }
+                      return null;
+                    },
                   ),
                   
                   SizedBox(height: 20),                  
@@ -164,7 +167,8 @@ class addAssetScreen extends StatelessWidget {
                                 ),
                               );
                             } else {
-                              addProduct();
+                              Provider.of<CrudAssets>(context,listen:false).addProduct(asset_no,dropdownValue,asset_brand.text,
+                              _selectedDate,asset_location.text,dropdownStatus);
                               Navigator.of(context).pop();
                             }},
                       ),
@@ -184,28 +188,28 @@ class addAssetScreen extends StatelessWidget {
     );
   }
 
-void setNo(String name) {
-    String nameNo;
-    String asset_no;
-    nameNo = name;
+// void setNo(String name) {
+//     String nameNo;
+//     String asset_no;
+//     nameNo = name;
 
-    if (name == 'Raket') {
-      asset_no = '1';
-      this.asset_no = asset_no;
-    } else if (name == 'Bulu Tangkis') {
-      asset_no = '2';
-      this.asset_no = asset_no;
-    } else if (name == 'Net') {
-      asset_no = '3';
-      this.asset_no = asset_no;
-    } else if (name == 'Kasut') {
-      asset_no = '4';
-      this.asset_no = asset_no;
-    } else if (name == 'Grip') {
-      asset_no = '5';
-      this.asset_no = asset_no;
-    }
-  }
+//     if (name == 'Raket') {
+//       asset_no = '1';
+//       this.asset_no = asset_no;
+//     } else if (name == 'Bulu Tangkis') {
+//       asset_no = '2';
+//       this.asset_no = asset_no;
+//     } else if (name == 'Net') {
+//       asset_no = '3';
+//       this.asset_no = asset_no;
+//     } else if (name == 'Kasut') {
+//       asset_no = '4';
+//       this.asset_no = asset_no;
+//     } else if (name == 'Grip') {
+//       asset_no = '5';
+//       this.asset_no = asset_no;
+//     }
+//   }
 
 }
 
